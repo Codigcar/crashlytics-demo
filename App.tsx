@@ -9,6 +9,7 @@ import React, {useEffect} from 'react';
 import {Button, View} from 'react-native';
 
 import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
 
 async function onSignIn(user: any) {
   try {
@@ -53,6 +54,50 @@ function App(): React.JSX.Element {
         }
       />
       <Button title="Test Crash" onPress={() => crashlytics().crash()} />
+      <Button
+        title="Add To Basket"
+        onPress={async () => {
+          try {
+            await analytics().logEvent('basket', {
+              id: 3745092,
+              item: 'mens grey t-shirt',
+              description: ['round neck', 'long sleeved'],
+              size: 'L',
+            });
+            console.log('Add To Basket');
+          } catch (error) {
+            console.log(
+              '🚀 ------------------------------------------------🚀',
+            );
+            console.log('🚀 ~ file: App.tsx:69 ~ onPress={ ~ error:', error);
+            console.log(
+              '🚀 ------------------------------------------------🚀',
+            );
+          }
+        }}
+      />
+      <Button
+        title="Press me"
+        // Logs in the firebase analytics console as "select_content" event
+        // only accepts the two object properties which accept strings.
+        onPress={async () => {
+          try {
+            await analytics().logSelectContent({
+              content_type: 'clothing',
+              item_id: 'abcd',
+            });
+            console.log('clothing');
+          } catch (error) {
+            console.log(
+              '🚀 ------------------------------------------------🚀',
+            );
+            console.log('🚀 ~ file: App.tsx:91 ~ onPress={ ~ error:', error);
+            console.log(
+              '🚀 ------------------------------------------------🚀',
+            );
+          }
+        }}
+      />
     </View>
   );
 }
